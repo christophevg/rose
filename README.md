@@ -25,7 +25,7 @@ It is important to understand that each observer is by design also observable. S
 
 An observable observer, as introduced above, can in fact be considered a kind of very small and more technical component. It has a single interface for observation handling, called the `reactor` that is applicable to both the required and provided interface. This interface basically consists of a single function to handle an `observation`.
 
-<p align="center"><img src="images/micro-component.svg"></p>
+<p align="center"><img src="images/micro-components.png"></p>
 
 ### A 1-on-1 OS API
 
@@ -37,7 +37,7 @@ Besides access to the underlying hardware, Rose also provides an API for managin
 
 Bringing all these concepts together in one picture, gives you a complete overview of Rose, its concepts and operational behavior:
 
-<p align="center"><img src="images/overview.svg"></p>
+<p align="center"><img src="images/overview.png"></p>
 
 In the middle is the actual device, the hardware platform, consisting of an mcu and a network module. The mcu itself contains flash memory or program memory, RAM, input/output pins, interrups and timers.
 
