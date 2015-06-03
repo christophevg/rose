@@ -1,5 +1,4 @@
-<img src="images/rose.png" align="right" width="100">
-# Rose, a Reactive Operating System Experiment 
+<h1><img src="images/rose.png" align="right" width="100">Rose, a Reactive Operating System Experiment</h1>
 
 Christophe VG (<contact@christophe.vg>)  
 [https://github.com/christophevg/rose](https://github.com/christophevg/rose)
