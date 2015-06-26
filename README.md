@@ -445,7 +445,43 @@ Although embryonal in its current form, it shows that the idea is technically fe
 
 Now consider that we can achieve the same using 16 bytes for `a`, 16 bytes for `b` and 35 bytes for `mul_a_b`, or 67 bytes in total, managing the linking of the functions at management station and constructing the running image remotely using micro-updates, results in a reduction in network traffic (for programming) of 98% :-)
 
-### Step 2: ...
+### Step 2: Abandon the Mach-O ship
+
+I was optimistic to first implement everything on my MacBook, but at this point, I have to abandon that route, simply because it would be too costly to first develop the entire solution based on its runtime architecture, most notably due to dynamic linking.
+
+When compiling an example which uses for example `printf`, on Mac the resulting executable will contain logic to call out to the `dyld_stub_binder` and `_helper`, which its turn will look up the dynamic library and call out to it.
+
+```
+0000000100000e60 <_p>:
+   100000e60:	50                   	push   %rax
+   100000e61:	e8 ba ff ff ff       	callq  100000e20 <_a>
+   100000e66:	48 8d 3d 3f 00 00 00 	lea    0x3f(%rip),%rdi        # 100000eac <_printf$stub+0x2a>
+   100000e6d:	89 c6                	mov    %eax,%esi
+   100000e6f:	b0 00                	mov    $0x0,%al
+   100000e71:	e8 0c 00 00 00       	callq  100000e82 <_printf$stub>
+   100000e76:	89 44 24 04          	mov    %eax,0x4(%rsp)
+   100000e7a:	58                   	pop    %rax
+   100000e7b:	c3                   	retq   
+...
+0000000100000e82 <_printf$stub>:
+   100000e82:	ff 25 90 01 00 00    	jmpq   *0x190(%rip)        # 100001018 <_printf$stub>
+...
+0000000100000e88 <__TEXT.__stub_helper>:
+   100000e88:	4c 8d 1d 79 01 00 00 	lea    0x179(%rip),%r11        # 100001008 <>
+   100000e8f:	41 53                	push   %r11
+   100000e91:	ff 25 69 01 00 00    	jmpq   *0x169(%rip)        # 100001000 <dyld_stub_binder$stub>
+   100000e97:	90                   	nop
+   100000e98:	68 00 00 00 00       	pushq  $0x0
+   100000e9d:	e9 e6 ff ff ff       	jmpq   100000e88 <_printf$stub+0x6>
+   100000ea2:	68 0c 00 00 00       	pushq  $0xc
+   100000ea7:	e9 dc ff ff ff       	jmpq   100000e88 <_printf$stub+0x6>
+...
+```
+If you're interested in more, I recommend [http://newosxbook.com/articles/DYLD.html](http://newosxbook.com/articles/DYLD.html).
+
+When compiling using `avr-gcc`, the resulting binary is self-contained. It's an image that contains everything, and therefore also the `printf` code. Extracting everything from such a file is much easier, and I'll switch to this platform now to implement the solution directly for it.
+
+## Bootstrapping Rose - Revisited
 
 _To be continued..._
 
